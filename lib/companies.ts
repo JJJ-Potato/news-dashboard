@@ -8,6 +8,8 @@ export const COMPANIES: Company[] = [
   { id: "daemyung", name: "대명건설", category: "joint", section: 1 },
   { id: "dowon", name: "도원이엔씨", category: "joint", section: 1 },
   { id: "daeya", name: "대야산업", category: "sub", section: 1 },
+  { id: "pacific", name: "태평양이앤씨", category: "joint", section: 2 },
+  { id: "daebo", name: "대보건설", category: "joint", section: 2 },
 ];
 
 export const CATEGORY_LABELS: Record<string, string> = {
