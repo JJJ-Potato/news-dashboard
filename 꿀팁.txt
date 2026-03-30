@@ -1,0 +1,23 @@
+ 나중에 공동도급사 업체가 추가되면 companies.ts에 section: 3 또는 section: 4 붙여서 추가하면 자동 반영돼.
+
+ 맞아, 직접 하면 돼. 순서만 알려줄게:
+
+  1. GitHub에서 news-dashboard 저장소 생성 (github.com → New repository)
+
+  2. 터미널에서 아래 명령어 실행
+  cd "C:\Users\A\Desktop\2026_vibe_coding\company_watch\news-dashboard"
+  git init
+  git add .
+  git commit -m "초기 커밋"
+  git remote add origin https://github.com/계정명/news-dashboard.git
+  git push -u origin main
+
+  3. Vercel 연결 (vercel.com → Add New Project → GitHub 저장소 선택)
+
+  4. Environment Variables 설정 (Vercel 프로젝트 설정에서)
+  - NAVER_CLIENT_ID
+  - NAVER_CLIENT_SECRET
+
+  5. Deploy
+
+  끝나면 알려줘!
