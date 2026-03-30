@@ -21,3 +21,20 @@
   5. Deploy
 
   끝나면 알려줘!
+
+
+  cd "C:\Users\A\Desktop\2026_vibe_coding\company_watch\news-dashboard"
+  git init
+  git add .
+  git commit -m "초기 커밋"
+  git remote add origin https://github.com/jjj-potato/news-dashboard.git
+  git push -u origin main
+
+
+
+
+
+  1. 코드 수정 (로컬에서)                                                                                                 2. git push
+  git add .                                                                                                               git commit -m "수정 내용"
+  git push
+  3. Vercel 자동 배포 — push하면 Vercel이 자동으로 감지해서 재배포해줘

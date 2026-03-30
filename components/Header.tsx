@@ -27,7 +27,24 @@ function formatDateTime(date: Date): { datePart: string; timePart: string } {
 export default function Header({ companyCount, newsCount, lastFetched, onRefreshAll, isRefreshing }: HeaderProps) {
   return (
     <header className="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* 모바일: 날짜 + 조회시간만 */}
+      <div className="sm:hidden px-4 py-2.5 flex items-center justify-center tabular-nums">
+        {lastFetched ? (() => {
+          const { datePart, timePart } = formatDateTime(lastFetched)
+          return (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-gray-400 font-medium">날짜</span>
+              <span className="text-xs font-semibold text-gray-700">{datePart}</span>
+              <span className="text-gray-300 text-xs">|</span>
+              <span className="text-xs text-gray-400 font-medium">조회시간</span>
+              <span className="text-xs font-semibold text-gray-700">{timePart}</span>
+            </div>
+          )
+        })() : <span className="text-xs text-gray-400">조회 중...</span>}
+      </div>
+
+      {/* 데스크톱: 풀 헤더 */}
+      <div className="hidden sm:flex max-w-7xl mx-auto px-6 lg:px-8 py-3.5 flex-row items-center justify-between gap-3">
         {/* 좌측: 로고 + 타이틀 */}
         <div className="flex items-center gap-3">
           <div
@@ -38,12 +55,12 @@ export default function Header({ companyCount, newsCount, lastFetched, onRefresh
           </div>
           <div>
             <h1 className="text-xl font-bold text-gray-900 leading-tight">건설사 뉴스 모니터링</h1>
-            <p className="text-sm text-gray-500 leading-tight">수도권 제2순환선(양평-이천) 건설공사 참여 건설사 최신뉴스를 한 눈에!</p>
+            <p className="text-sm text-gray-500 leading-tight">수도권 제2순환선(양평-이천) 건설공사</p>
           </div>
         </div>
 
         {/* 우측: 통계 + 조회시각 + 새로고침 */}
-        <div className="flex items-center gap-4 flex-wrap">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-3 text-sm text-gray-500">
             <span>모니터링 <span className="font-semibold text-gray-800">{companyCount}개사</span></span>
             <span className="text-gray-300">|</span>

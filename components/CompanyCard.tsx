@@ -118,8 +118,6 @@ export default function CompanyCard({ company, news, onRefresh, isRefreshing, er
               <div className="flex-1 min-w-0">
                 <a
                   href={item.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="text-sm font-medium text-gray-800 hover:text-blue-600 leading-snug block overflow-hidden"
                   style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
                 >
