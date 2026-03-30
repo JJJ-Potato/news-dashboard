@@ -67,7 +67,7 @@ export default function CompanyCard({ company, news, onRefresh, isRefreshing, er
           >
             {company.name[0]}
           </div>
-          <span className="font-semibold text-gray-900 text-sm">{company.name}</span>
+          <span className="font-semibold text-gray-900 text-base">{company.name}</span>
           <span
             className="text-xs font-medium px-2 py-0.5 rounded-full"
             style={{ backgroundColor: colors.lightBg, color: colors.text }}
@@ -118,14 +118,14 @@ export default function CompanyCard({ company, news, onRefresh, isRefreshing, er
               <div className="flex-1 min-w-0">
                 <a
                   href={item.link}
-                  className="text-sm font-medium text-gray-800 hover:text-blue-600 leading-snug block overflow-hidden"
+                  className="text-base font-medium text-gray-800 hover:text-blue-600 leading-snug block overflow-hidden"
                   style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
                 >
                   {highlight(item.title, company.name)}
                 </a>
                 {item.description && (
                   <p
-                    className="text-xs text-gray-500 mt-0.5 overflow-hidden"
+                    className="text-sm text-gray-500 mt-0.5 overflow-hidden"
                     style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' }}
                   >
                     {highlight(item.description, company.name)}

@@ -6,7 +6,7 @@ export const COMPANIES: Company[] = [
   { id: "kcc", name: "KCC건설", category: "prime" },
   { id: "taeyoung", name: "태영건설", category: "prime" },
   { id: "daemyung", name: "대명건설", category: "joint", section: 1 },
-  { id: "dowon", name: "도원이엔씨", category: "joint", section: 2 },
+  { id: "dowon", name: "도원이엔씨", category: "joint", section: 1 },
   { id: "daeya", name: "대야산업", category: "sub", section: 1 },
 ];
 

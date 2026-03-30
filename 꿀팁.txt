@@ -34,7 +34,14 @@
 
 
 
-  1. 코드 수정 (로컬에서)                                                                                                 2. git push
-  git add .                                                                                                               git commit -m "수정 내용"
+  1. 코드 수정 (로컬에서)                                                                                                 
+
+2. git push
+  git add .                                                                                                               
+  git commit -m "수정 내용"
   git push
   3. Vercel 자동 배포 — push하면 Vercel이 자동으로 감지해서 재배포해줘
+
+
+이제 한국경제, 연합뉴스, 조선일보 등 한글 이름으로 표시돼. 매핑 테이블에 없는 도메인은 기존처럼 도메인명이
+  그대로 표시되니까, 새로운 언론사가 뜨면 lib/utils.ts에 추가하면 돼.

@@ -1,5 +1,6 @@
 import { type NextRequest } from "next/server";
 import type { ApiResponse, NewsItem } from "@/lib/types";
+import { domainToPress } from "@/lib/utils";
 
 function stripHtml(str: string): string {
   return str.replace(/<[^>]*>/g, "").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&#0*39;/g, "'").trim();
@@ -39,7 +40,7 @@ export async function GET(request: NextRequest) {
       link: item.link,
       description: stripHtml(item.description),
       pubDate: item.pubDate,
-      source: new URL(item.originallink).hostname.replace(/^www\./, ""),
+      source: domainToPress(new URL(item.originallink).hostname),
     }));
 
     // 제목 또는 요약에 기업명 전체가 포함된 기사만 유지
