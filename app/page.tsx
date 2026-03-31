@@ -19,18 +19,24 @@ type CompanyData = {
   items: NewsItem[]
   loading: boolean
   error: string | null
+  fetched: boolean  // 최초 로드 여부
 }
 
 const INITIAL_STATE: Record<string, CompanyData> = Object.fromEntries(
-  COMPANIES.map(c => [c.id, { items: [], loading: true, error: null }])
+  COMPANIES.map(c => [c.id, {
+    items: [],
+    loading: c.category === 'prime', // 원도급사만 즉시 로딩
+    error: null,
+    fetched: false,
+  }])
 )
 
 export default function Home() {
   const [dataMap, setDataMap] = useState<Record<string, CompanyData>>(INITIAL_STATE)
   const [lastFetched, setLastFetched] = useState<Date | null>(null)
   const [isRefreshingAll, setIsRefreshingAll] = useState(false)
-  const [activeJointSection, setActiveJointSection] = useState<number | null>(1)
-  const [activeSubSection, setActiveSubSection] = useState<number | null>(1)
+  const [activeJointSection, setActiveJointSection] = useState<number | null>(null)
+  const [activeSubSection, setActiveSubSection] = useState<number | null>(null)
 
   const fetchOne = useCallback(async (companyId: string, companyName: string) => {
     setDataMap(prev => ({
@@ -44,29 +50,56 @@ export default function Home() {
       if (data.error) throw new Error(data.error)
       setDataMap(prev => ({
         ...prev,
-        [companyId]: { items: data.items, loading: false, error: null },
+        [companyId]: { items: data.items, loading: false, error: null, fetched: true },
       }))
     } catch (err) {
       const message = err instanceof Error ? err.message : '알 수 없는 오류'
       setDataMap(prev => ({
         ...prev,
-        [companyId]: { ...prev[companyId], loading: false, error: message },
+        [companyId]: { ...prev[companyId], loading: false, error: message, fetched: true },
       }))
     }
   }, [])
 
-  const fetchAll = useCallback(async () => {
-    setIsRefreshingAll(true)
-    await Promise.allSettled(COMPANIES.map(c => fetchOne(c.id, c.name)))
-    setLastFetched(new Date())
-    setIsRefreshingAll(false)
-  }, [fetchOne])
-
+  // 초기 로드: 원도급사만
   useEffect(() => {
-    fetchAll()
+    const primes = COMPANIES.filter(c => c.category === 'prime')
+    Promise.allSettled(primes.map(c => fetchOne(c.id, c.name)))
+      .then(() => setLastFetched(new Date()))
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleRefreshAll = () => fetchAll()
+  // 공구 버튼 클릭 시 미로드 업체만 페치
+  const loadSection = useCallback((sectionCompanies: typeof COMPANIES) => {
+    const toFetch = sectionCompanies.filter(c => !dataMap[c.id].fetched && !dataMap[c.id].loading)
+    if (toFetch.length > 0) {
+      Promise.allSettled(toFetch.map(c => fetchOne(c.id, c.name)))
+        .then(() => setLastFetched(new Date()))
+    }
+  }, [dataMap, fetchOne])
+
+  const handleJointSection = (sec: number, isActive: boolean, companies: typeof COMPANIES) => {
+    const next = isActive ? null : sec
+    setActiveJointSection(next)
+    if (next !== null) loadSection(companies.filter(c => c.section === next))
+  }
+
+  const handleSubSection = (sec: number, isActive: boolean, companies: typeof COMPANIES) => {
+    const next = isActive ? null : sec
+    setActiveSubSection(next)
+    if (next !== null) loadSection(companies.filter(c => c.section === next))
+  }
+
+  const handleRefreshAll = () => {
+    // 이미 로드된 업체만 새로고침
+    const loaded = COMPANIES.filter(c => dataMap[c.id].fetched)
+    setIsRefreshingAll(true)
+    Promise.allSettled(loaded.map(c => fetchOne(c.id, c.name)))
+      .then(() => {
+        setLastFetched(new Date())
+        setIsRefreshingAll(false)
+      })
+  }
+
   const handleRefreshCompany = (companyId: string, companyName: string) => {
     fetchOne(companyId, companyName).then(() => setLastFetched(new Date()))
   }
@@ -105,7 +138,7 @@ export default function Home() {
                       return (
                         <button
                           key={sec}
-                          onClick={() => setActiveJointSection(isActive ? null : sec)}
+                          onClick={() => handleJointSection(sec, isActive, companies)}
                           className="px-3 py-1 text-xs font-semibold rounded-full border transition-colors cursor-pointer"
                           style={isActive
                             ? { backgroundColor: '#1A237E', color: '#fff', borderColor: '#1A237E' }
@@ -124,7 +157,7 @@ export default function Home() {
                     <div className={`grid gap-4 ${activeCompanies.length === 1 ? 'grid-cols-1 lg:max-w-2xl' : 'grid-cols-1 md:grid-cols-2'}`}>
                       {activeCompanies.map(company => {
                         const d = dataMap[company.id]
-                        if (d.loading && d.items.length === 0) return <SkeletonCard key={company.id} />
+                        if (d.loading && !d.fetched) return <SkeletonCard key={company.id} />
                         return (
                           <CompanyCard
                             key={company.id}
@@ -163,7 +196,7 @@ export default function Home() {
                       return (
                         <button
                           key={sec}
-                          onClick={() => setActiveSubSection(isActive ? null : sec)}
+                          onClick={() => handleSubSection(sec, isActive, companies)}
                           className="px-3 py-1 text-xs font-semibold rounded-full border transition-colors cursor-pointer"
                           style={isActive
                             ? { backgroundColor: '#B71C1C', color: '#fff', borderColor: '#B71C1C' }
@@ -182,7 +215,7 @@ export default function Home() {
                     <div className={`grid gap-4 ${activeCompanies.length === 1 ? 'grid-cols-1 lg:max-w-2xl' : 'grid-cols-1 md:grid-cols-2'}`}>
                       {activeCompanies.map(company => {
                         const d = dataMap[company.id]
-                        if (d.loading && d.items.length === 0) return <SkeletonCard key={company.id} />
+                        if (d.loading && !d.fetched) return <SkeletonCard key={company.id} />
                         return (
                           <CompanyCard
                             key={company.id}
@@ -215,7 +248,7 @@ export default function Home() {
               <div className={`grid gap-4 ${companies.length === 1 ? 'grid-cols-1 lg:max-w-2xl' : 'grid-cols-1 md:grid-cols-2'}`}>
                 {companies.map(company => {
                   const d = dataMap[company.id]
-                  if (d.loading && d.items.length === 0) return <SkeletonCard key={company.id} />
+                  if (d.loading && !d.fetched) return <SkeletonCard key={company.id} />
                   return (
                     <CompanyCard
                       key={company.id}
