@@ -19,7 +19,6 @@ export const COMPANIES: Company[] = [
   { id: "daeguk", name: "대국건설산업", category: "joint", section: 4 },
   { id: "sekwang", name: "세광건설", category: "sub", section: 1 },
   { id: "samhyun", name: "삼현비앤이", category: "sub", section: 1 },
-  { id: "oryun", name: "오륜", category: "sub", section: 1 },
   { id: "jeongpum", name: "정품건설산업", category: "sub", section: 2 },
   { id: "jisung", name: "지승씨앤아이", category: "sub", section: 2 },
   { id: "janghun", name: "장헌산업", category: "sub", section: 2 },
